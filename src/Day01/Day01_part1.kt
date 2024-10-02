@@ -17,5 +17,9 @@ fun main() {
     check(main(testInput) == 142)
 
     val input = readInput("Day01", "Day01")
+
+    val startTime = System.currentTimeMillis()
     main(input).println()
+    val endTime = System.currentTimeMillis()
+    println("Time elapsed in milliseconds: ${endTime - startTime}")
 }
