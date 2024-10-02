@@ -5,11 +5,10 @@ import readInput
 
 fun main() {
     fun main(input: List<String>): Int {
-        val nums = input.map { it.filter { it.isDigit() } }
-        val ret = nums.filter { it.isNotEmpty() }.map { "${it.firstOrNull()}${it.lastOrNull()}" }.map { it.toInt() }
-            .reduceOrNull { a,b -> a + b }!!
+        return input.sumOf {
+            (it.first { it.isDigit() }.digitToInt() * 10) + (it.last { it.isDigit() }.digitToInt())
+        }
 
-        return ret
     }
 
     // test if implementation meets criteria from the description, like:
