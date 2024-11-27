@@ -3,7 +3,14 @@ package Day02
 import println
 import readInput
 
-data class Game(val gameString: String, val id: Int = getId(gameString)) {
+
+val maxValues = mapOf(
+    "red" to 12,
+    "blue" to 14,
+    "green" to 13,
+)
+
+data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchString)) {
     companion object {
         private fun getId(gameString: String): Int {
             val regex = "Game (\\d+):".toRegex()
@@ -25,22 +32,42 @@ data class Game(val gameString: String, val id: Int = getId(gameString)) {
     }
 
     private fun isValid(): Boolean {
+        val gameSets = getGameSets()
+        gameSets.forEach {
+            val colorCounts = it.split(',')
+            colorCounts.forEach {
+                val regex = "(\\d+) (\\w+)".toRegex()
+                val match = regex.find(it)
+                if (match == null) {
+                    throw Exception("No color count combo could be found")
+                }
+                val count = match.groupValues[1].toInt()
+                val color = match.groupValues[2].trim()
+
+                val maxVal = maxValues[color]?.toInt() ?: Int.MAX_VALUE
+                if (count > maxVal) return false
+            }
+        }
+
+        return true
+    }
+
+    private fun getGameSets(): List<String> {
         val regex = "Game (\\d+):(.*)(?:;|\$)".toRegex()
-        val match = regex.find(gameString)
+        val match = regex.find(gameMatchString)
         if (match == null) {
             throw Exception("No game contents could be found.")
         }
-        println(match.groupValues[2].trim())
 
-        return true
+        return match.groupValues[2].split(';')
     }
 }
 
 
 fun run(input: List<String>): Int {
     return input.sumOf {
-        val game = Game(it)
-        game.score()
+        val gameMatch = GameMatch(it)
+        gameMatch.score()
     }
 }
 
