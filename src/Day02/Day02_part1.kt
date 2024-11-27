@@ -3,10 +3,14 @@ package Day02
 import println
 import readInput
 
-fun getId(game: String): Int? {
+fun getId(game: String): Int {
     val regex = "Game (\\d+):".toRegex()
     val match = regex.find(game)
-    val id = match?.let { it.groupValues[1].toInt() }
+    if (match == null) {
+        throw Exception("No game id could be found.")
+    }
+
+    val id = match.groupValues[1].toInt()
 
     return id
 }
@@ -14,12 +18,15 @@ fun getId(game: String): Int? {
 fun isValid(game: String): Boolean {
     val regex = "Game (\\d+):(.*)(?:;|\$)".toRegex()
     val match = regex.find(game)
-    println(match?.let { it.groupValues[2].trim() })
+    if (match == null) {
+        throw Exception("No game contents could be found.")
+    }
+    println(match.groupValues[2].trim())
 
     return true
 }
 
-fun score(game: String): Int? {
+fun score(game: String): Int {
     if (isValid(game)) return getId(game)
 
     return 0
@@ -27,7 +34,7 @@ fun score(game: String): Int? {
 
 fun run(input: List<String>): Int {
     return input.sumOf {
-        score(it) ?: 0
+        score(it)
     }
 
 }
