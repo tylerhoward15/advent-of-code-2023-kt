@@ -3,40 +3,45 @@ package Day02
 import println
 import readInput
 
-fun getId(game: String): Int {
-    val regex = "Game (\\d+):".toRegex()
-    val match = regex.find(game)
-    if (match == null) {
-        throw Exception("No game id could be found.")
+data class Game(val gameString: String, val id: Int = getId(gameString)) {
+    companion object {
+        private fun getId(gameString: String): Int {
+            val regex = "Game (\\d+):".toRegex()
+            val match = regex.find(gameString)
+            if (match == null) {
+                throw Exception("No game id could be found.")
+            }
+
+            val id = match.groupValues[1].toInt()
+
+            return id
+        }
     }
 
-    val id = match.groupValues[1].toInt()
+    fun score(): Int {
+        if (isValid()) return id
 
-    return id
-}
-
-fun isValid(game: String): Boolean {
-    val regex = "Game (\\d+):(.*)(?:;|\$)".toRegex()
-    val match = regex.find(game)
-    if (match == null) {
-        throw Exception("No game contents could be found.")
+        return 0
     }
-    println(match.groupValues[2].trim())
 
-    return true
+    private fun isValid(): Boolean {
+        val regex = "Game (\\d+):(.*)(?:;|\$)".toRegex()
+        val match = regex.find(gameString)
+        if (match == null) {
+            throw Exception("No game contents could be found.")
+        }
+        println(match.groupValues[2].trim())
+
+        return true
+    }
 }
 
-fun score(game: String): Int {
-    if (isValid(game)) return getId(game)
-
-    return 0
-}
 
 fun run(input: List<String>): Int {
     return input.sumOf {
-        score(it)
+        val game = Game(it)
+        game.score()
     }
-
 }
 
 
