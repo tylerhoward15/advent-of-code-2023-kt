@@ -6,19 +6,22 @@ import readInput
 fun main() {
     fun getId(game: String): Int? {
         val regex = "Game (\\d+):".toRegex()
-        val tmp = regex.find(game)
-        val tmps = tmp?.let{ it.groupValues[1].toInt() }
-        return tmps
+        val match = regex.find(game)
+        val id = match?.let{ it.groupValues[1].toInt() }
+
+        return id
     }
 
     fun isValid(game: String): Boolean {
+        val regex = "Game (\\d+):(.*)(?:;|\$)".toRegex()
+        val match = regex.find(game)
+        println(match?.let { it.groupValues[2].trim() })
+
         return true
     }
 
     fun score(game: String): Int? {
         if (isValid(game)) return getId(game)
-        return 0
-
     }
 
     fun main(input: List<String>): Int {
