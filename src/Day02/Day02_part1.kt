@@ -14,10 +14,7 @@ data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchS
     companion object {
         private fun getId(gameString: String): Int {
             val regex = "Game (\\d+):".toRegex()
-            val match = regex.find(gameString)
-            if (match == null) {
-                throw Exception("No game id could be found.")
-            }
+            val match = regex.find(gameString) ?: throw Exception("Game id could not found")
 
             val id = match.groupValues[1].toInt()
 
@@ -37,10 +34,8 @@ data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchS
             val colorCounts = it.split(',')
             colorCounts.forEach {
                 val regex = "(\\d+) (\\w+)".toRegex()
-                val match = regex.find(it)
-                if (match == null) {
-                    throw Exception("No color count combo could be found")
-                }
+                val match = regex.find(it) ?: throw Exception("No color count combo could be found")
+
                 val count = match.groupValues[1].toInt()
                 val color = match.groupValues[2].trim()
 
@@ -54,10 +49,7 @@ data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchS
 
     private fun getGameSets(): List<String> {
         val regex = "Game (\\d+):(.*)(?:;|\$)".toRegex()
-        val match = regex.find(gameMatchString)
-        if (match == null) {
-            throw Exception("No game contents could be found.")
-        }
+        val match = regex.find(gameMatchString) ?: throw Exception("No game contents could be found.")
 
         return match.groupValues[2].split(';')
     }
