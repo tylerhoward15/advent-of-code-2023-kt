@@ -1,4 +1,4 @@
-package Day02
+package Day02.part2
 
 import println
 import readInput
@@ -66,7 +66,7 @@ fun run(input: List<String>): Int {
 
 fun main(args: Array<String>) {
     // test if implementation meets criteria from the description, like:
-    val testInput = readInput("Day02", "Day02_part1_test")
+    val testInput = readInput("Day02", "Day02_part2_test")
     val testOutput = run(testInput)
     check(testOutput == 8) { "Returned $testOutput" }
 
