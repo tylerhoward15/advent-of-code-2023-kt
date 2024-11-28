@@ -2,13 +2,8 @@ package Day02.part2
 
 import println
 import readInput
+import kotlin.math.max
 
-
-val maxValues = mapOf(
-    "red" to 12,
-    "blue" to 14,
-    "green" to 13,
-)
 
 data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchString)) {
     companion object {
@@ -23,13 +18,14 @@ data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchS
     }
 
     fun score(): Int {
-        if (isValid()) return id
-
-        return 0
-    }
-
-    private fun isValid(): Boolean {
         val gameSets = getGameSets()
+
+        val maxValues = mutableMapOf(
+            "red" to 0,
+            "blue" to 0,
+            "green" to 0,
+        )
+
         gameSets.forEach {
             val colorCounts = it.split(',')
             colorCounts.forEach {
@@ -39,12 +35,11 @@ data class GameMatch(val gameMatchString: String, val id: Int = getId(gameMatchS
                 val count = match.groupValues[1].toInt()
                 val color = match.groupValues[2].trim()
 
-                val maxVal = maxValues[color]?.toInt() ?: Int.MAX_VALUE
-                if (count > maxVal) return false
+                maxValues.computeIfPresent(color) { _, oldValue -> max(oldValue, count) }
             }
         }
 
-        return true
+        return maxValues.values.reduce { prod, x -> prod * x }
     }
 
     private fun getGameSets(): List<String> {
@@ -68,7 +63,7 @@ fun main(args: Array<String>) {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("Day02", "Day02_part2_test")
     val testOutput = run(testInput)
-    check(testOutput == 8) { "Returned $testOutput" }
+    check(testOutput == 2286) { "Returned $testOutput" }
 
     val input = readInput("Day02", "Day02")
 
